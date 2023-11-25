@@ -1,36 +1,59 @@
-export type Guardian = {
-  fatherName: string;
-  fatherOccupation: string;
-  fatherContractNo: string;
-  motherName: string;
-  motherOccupation: string;
-  motherContractNo: string;
-};
-export type LocalGuardian = {
-  name: string;
-  occupation: string;
-  address: string;
-  contractNo: string;
-};
-export type UserName = {
+import { Model, Types } from "mongoose";
+
+export type TUserName = {
   firstName: string;
   middleName: string;
   lastName: string;
 };
 
-export type Student = {
+export type TGuardian = {
+  fatherName: string;
+  fatherOccupation: string;
+  fatherContactNo: string;
+  motherName: string;
+  motherOccupation: string;
+  motherContactNo: string;
+};
+
+export type TLocalGuardian = {
+  name: string;
+  occupation: string;
+  contactNo: string;
+  address: string;
+};
+
+export type TStudent = {
   id: string;
-  name: UserName;
-  gender: 'male' | 'female';
+  user:Types.ObjectId;
+  name: TUserName;
+  gender: 'male' | 'female' | 'other';
+  dateOfBirth?: string;
   email: string;
-  dethOfBirth: string;
-  contractNo: string;
+  contactNo: string;
   emergencyContactNo: string;
-  bloodGroup?: 'A+' | 'B+' | 'AB+' | 'O+' | 'A-' | 'B-' | 'AB-' | 'O-';
+  bloogGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   permanentAddress: string;
-  guardian: Guardian;
-  localGuargian: LocalGuardian;
+  guardian: TGuardian;
+  localGuardian: TLocalGuardian;
   profileImg?: string;
-  isActive: 'active' | 'inActive';
+  isDeleted?:boolean
+ 
 };
+
+// for creating static 
+ export interface StudentModels extends Model<TStudent>{
+  // eslint-disable-next-line no-unused-vars
+  isUserExists(id:string):Promise<TStudent | null> 
+
+ }
+
+
+// for creating instance 
+
+//for creating isntance 
+/*export type StudentMethods={
+  isUserExist(id:string):Promise<TStudent | null> 
+}*/
+// Create a new Model type that knows about Student Methods...
+//export type  StudentModel = Model<TStudent, Record<string, never>, StudentMethods>;
