@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "./user.services";
+import httpStatus from "http-status";
+import sendRespone from "../../utility/sendRespone";
 
 
 
@@ -11,7 +13,7 @@ const createStudent = async (req: Request, res: Response,next:NextFunction) => {
 
       const result=await UserService.createStudentIntoDb(password,student);
 
-     
+      sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Create Student Suucessfully',data:result})
     // creating a schema validation using zod
     
      
@@ -22,19 +24,6 @@ const createStudent = async (req: Request, res: Response,next:NextFunction) => {
       // {
       //   res.status(500).send({success:false,message:'something went wrong',error:error.details})
       // }
-  
-      
-      
-    
-     
-  
-      
-  
-      res.status(200).json({
-        success: true,
-        message: 'create student successfully',
-        data: result,
-      });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error:any) {
      next(error);

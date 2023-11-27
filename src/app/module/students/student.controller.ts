@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StudentServices } from './student.services';
+import sendRespone from '../../utility/sendRespone';
+import httpStatus from 'http-status';
 //import studentSchema from './student.validation';
 
 
@@ -11,13 +13,9 @@ const specigicStudent= async(req:Request,res:Response,next:NextFunction)=>{
 
   try{
     const {studentId}=req.params;
-    console.log(studentId);
+  
     const result=await StudentServices.specificStudentFromDb(studentId);
-    res.status(200).json({
-      success: true,
-      message: 'create student successfully',
-      data: result,
-    });
+    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find Specific Student',data:result});
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   catch(error){
@@ -34,11 +32,7 @@ const deleteStudent=async(req:Request,res:Response,next:NextFunction)=>{
    
 
   const result=await StudentServices.deleteStudentFromDb(studentId);
-  res.status(200).json({
-    success: true,
-    message: 'student delete successfully',
-    data: result,
-   });
+  sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Deleted Student',data:result})
   }
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,11 +49,7 @@ const deleteStudent=async(req:Request,res:Response,next:NextFunction)=>{
 const getAllStudents = async (req: Request, res: Response,next:NextFunction) => {
   try {
     const result = await StudentServices.getAllStudentFormDb();
-    res.status(200).json({
-      success: true,
-      message: 'successfully get all data',
-      data: result,
-    });
+    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find  Student',data:result})
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     next(error);
