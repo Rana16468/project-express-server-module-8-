@@ -1,18 +1,15 @@
 import config from "../../config";
+import { AcademicSemester } from "../academicSemester/academicSemester.model";
 import { Student } from "../student.model";
 import { TStudent } from "../students/student.interface";
 import { User } from "../user.model";
 import { TUser } from "./user.interface";
+import { generateStudentId } from "./user.utilts";
 
-const createStudentIntoDb = async (password:string,studentData: TStudent) => {
-    // build in staatic method in mongodb
- 
- 
-   /*if(await Student.isUserExists(studentData.id))
-   {
-     throw new Error('User Already Exists')
-   }*/
-    //if password is not given,use default password
+const createStudentIntoDb = async (password:string,payload: TStudent) => {
+    
+
+    const admissionSemester=await  AcademicSemester.findById(payload.admissionSemester)
 
     const userData:Partial<TUser>={};
 // set user password 
@@ -20,17 +17,20 @@ const createStudentIntoDb = async (password:string,studentData: TStudent) => {
     //set Student Role
     userData.role='user';
     //set munality auto generated id
-    userData.id='19316468'
+    userData.id=await generateStudentId(admissionSemester)
+
+
+    
 
     // create a user model 
    const newUser = await User.create(userData);
    // create a student
    if(Object.keys(newUser).length){
-    studentData.id=newUser.id;
-    studentData.user=newUser._id;
+
+     payload.user=newUser._id;
    }
 
-   const newStudent=await Student.create(studentData);
+   const newStudent=await Student.create(payload);
 
    return newStudent;
  };

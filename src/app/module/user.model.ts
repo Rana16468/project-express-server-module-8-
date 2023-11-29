@@ -8,7 +8,7 @@ import bcryp from 'bcrypt';
 
 
 const TUserSchema=new Schema<TUser>({
-    id:{type:String,required:[true,'ID is Required']},
+    id:{type:String,required:[true,'ID is Required'],unique:true},
     password:{type:String,required:[true,'Password is Required']},
    needsPasswordChange:{type:Boolean,required:[true,'Ness Password Change is Required'] ,default:true},
    role:{
