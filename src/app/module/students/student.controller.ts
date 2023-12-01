@@ -23,7 +23,7 @@ const specigicStudent= catchAsync(async(req,res)=>{
 const deleteStudent:RequestHandler=catchAsync(async(req,res)=>{
 
     const {studentId}=req.params;
-      const result=await StudentServices.deleteStudentFromDb(studentId);
+      const result=await StudentServices.deleteStudentFormDb(studentId);
       sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Deleted Student',data:result})
   
   
@@ -38,10 +38,26 @@ const getAllStudents:RequestHandler = catchAsync(async (req, res) => {
     sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find  Student',data:result})
  
   
-})
+});
+
+//updateStudent
+
+const updateStudent=catchAsync(async(req,res)=>{
+
+  const {studentId}=req.params;
+  const { student}=req.body;
+  const result=await StudentServices.updateStudentIntoDb(studentId,student);
+  sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Update ',data:result})
+ 
+
+  
+
+
+});
 
 export const StudentControllers = {
   getAllStudents,
   specigicStudent,
-  deleteStudent
+  deleteStudent,
+  updateStudent
 };

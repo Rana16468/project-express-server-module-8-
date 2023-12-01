@@ -10,7 +10,7 @@ const findLastStudentId= async()=>{
         
 createdAt:-1
     }).lean();
-    return lastStudent?lastStudent?.id.substring(6):undefined;
+    return lastStudent?lastStudent?.id:undefined;
 
 
 }
@@ -20,7 +20,16 @@ export const generateStudentId=async(payload:TAcademicSemester | null)=>{
 
    
 
-    const currentId=await findLastStudentId() || (0).toString()
+  let currentId= (0).toString()  // default 0000
+    const lastStudentId=await findLastStudentId();
+    const lastStudentSemester=lastStudentId?.substring(4,6); //semester id : 01 | 02 | 03
+    const lastStudentYear=lastStudentId?.substring(0,4); // year 2030 
+    if(lastStudentId && payload?.code===lastStudentSemester && payload?.year===lastStudentYear)
+    {
+
+        currentId=lastStudentId.substring(6);
+    }
+
      let incrementId=(Number(currentId) + 1).toString().padStart(4,'0');
     incrementId=`${payload?.year}${payload?.code}${incrementId}`
    

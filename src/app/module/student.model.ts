@@ -81,6 +81,7 @@ const localGuradianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent,StudentModels>(
   {
+    id:{type:String,required:[true,'Id Is Required']},
     user:{type:Schema.Types.ObjectId,
     required:[true,'User id is Required'],
    unique:true,
@@ -137,7 +138,10 @@ const studentSchema = new Schema<TStudent,StudentModels>(
       type:Schema.Types.ObjectId,
       ref:'AcademicSemester',
       required:[true,'Addmission Semester is Required']
-    }
+    },
+    academicDepartment:{type:Schema.Types.ObjectId,ref:'AcademicDepartment',
+    required:[true,'Addmission  Department is Required']},
+    isDeleted:{type:Boolean,default:false}
    
   },{
     toJSON:{

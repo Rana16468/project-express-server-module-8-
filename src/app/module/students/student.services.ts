@@ -1,14 +1,22 @@
+import mongoose from 'mongoose';
 import {Student} from '../student.model';
+import AppError from '../../error/AppError';
+import httpStatus from 'http-status';
+import { User } from '../user.model';
+import { TStudent } from './student.interface';
 
 
 
 
 const getAllStudentFormDb = async () => {
-  const result = Student.find();
+  const result = Student.find().populate('admissionSemester').populate({
+    path:'academicDepartment',
+    populate:'academicFaculty'
+});
   return result;
 };
 const deleteStudentFromDb=async(id:string)=>{
-  console.log(id);
+
   const result=Student.updateOne({ id }, { isDeleted: true });
   return result;
 
@@ -17,13 +25,98 @@ const deleteStudentFromDb=async(id:string)=>{
 
 //findone 
 const specificStudentFromDb=async(id:string)=>{
-  const result = Student.aggregate([{$match:{id:id}}]);
+  const result = Student.findById(id).populate('admissionSemester').populate({
+    path:'academicDepartment',
+    populate:'academicFaculty'
+  })
   return result;
+
+}
+
+// delete 
+const deleteStudentFormDb=async(id:string)=>{
+
+  const session=await mongoose.startSession();
+  try{
+    session.startTransaction();
+    const deletedStudent=await Student.findOneAndUpdate({id},{isDeleted:true},{upsert:true,session});
+   if(!deletedStudent)
+   {
+    throw new AppError(httpStatus.BAD_REQUEST,'Student Delete Request Failded','');
+   }
+
+   const deleteUser=await User.findOneAndUpdate({id},{isDeleted:true},{upsert:true, session});
+   if(!deleteUser)
+   {
+    throw new AppError(httpStatus.BAD_REQUEST,'USER Delete Request Failded','');
+   }
+   await session.commitTransaction();
+   await session.endSession();
+
+    return deleteStudentFormDb;
+  }
+  catch(error){
+    await session.abortTransaction();
+    await session.endSession();
+  }
+ 
+}
+
+//update 
+const updateStudentIntoDb=async(id:string ,payload:Partial<TStudent>)=>{
+
+const{name,guardian,localGuardian,...remaningStudentData}=payload;
+
+const modifiedUpdatedData:Record<string,unknown>={...remaningStudentData}
+
+if(name && Object.keys(name))
+{
+  for(const [key,value] of Object.entries(name))
+  {
+    modifiedUpdatedData[`name.${key}`]=value
+  }
+}
+/*'$namefirstName': 'Mahebur',
+  '$namemiddleName': 'Rahman',
+  '$namelastName': 'Joy',
+  '$guardianfatherName': 'Father Name',
+  '$guardianfatherOccupation': 'Engineer',
+  '$guardianfatherContactNo': '1112223333',
+  '$guardianmotherName': 'Mother Name',
+  '$guardianmotherOccupation': 'Doctor',
+  '$guardianmotherContactNo': '4445556666',
+  '$guardianname': 'Local Guardian Name',
+  '$guardianoccupation': 'Teacher',
+  '$guardiancontactNo': '7778889999',
+  '$guardianaddress': '789 Pine Road, Village' */
+
+if(guardian && Object.keys(guardian))
+{
+  for(const [key,value] of Object.entries(guardian))
+  {
+    modifiedUpdatedData[`guardian.${key}`]=value
+  }
+}
+
+if(localGuardian && Object.keys(localGuardian))
+{
+  for(const [key,value] of Object.entries(localGuardian))
+  {
+    modifiedUpdatedData[`localGuardian.${key}`]=value
+  }
+}
+
+
+
+  const result=await Student.findOneAndUpdate({id},modifiedUpdatedData,{upsert:true,runValidators:true});
+  return result
 
 }
 export const StudentServices = {
  
   getAllStudentFormDb,
   specificStudentFromDb,
-  deleteStudentFromDb
+  deleteStudentFromDb,
+  deleteStudentFormDb,
+  updateStudentIntoDb
 };

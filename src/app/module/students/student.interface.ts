@@ -23,6 +23,7 @@ export type TLocalGuardian = {
 };
 
 export type TStudent = {
+  id:string,
   user:Types.ObjectId;
   name: TUserName;
   gender: 'male' | 'female' | 'other';
@@ -37,6 +38,8 @@ export type TStudent = {
   localGuardian: TLocalGuardian;
   profileImg?: string;
   admissionSemester:Types.ObjectId;
+  academicDepartment:Types.ObjectId;
+  isDeleted:boolean
 };
 
 // for creating static 
