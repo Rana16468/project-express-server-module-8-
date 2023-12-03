@@ -4,20 +4,89 @@ import AppError from '../../error/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user.model';
 import { TStudent } from './student.interface';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 
 
 
-const getAllStudentFormDb = async () => {
-  const result = Student.find().populate('admissionSemester').populate({
+const getAllStudentFormDb = async (query:Record<string,unknown>) => {
+
+  const studentSearchableField=['email','name.firstName',"presentAddress"]
+
+  const studentQuery= new QueryBuilder(Student.find(),query);
+  studentQuery.search(studentSearchableField).filter().sort().paginate().fields();
+  const result= await studentQuery.modelQuery;
+  return result;
+ /* let searchTerm='';
+  const studentSearchableField=['email','name.firstName',"presentAddress"]
+
+
+  
+  if(query?.searchTerm)
+  {
+    searchTerm=query?.searchTerm as string
+  }
+
+  const searchQuery=Student.find({
+    $or:studentSearchableField.map((field)=>({[field]:{$regex:searchTerm,$options:'i'}}))
+  });
+
+  // filttering 
+  const queryObject={...query};
+  const excludeField=['searchTerm','sort','limit','page','fields'];
+  excludeField.forEach(el=>delete queryObject[el]);
+
+//console.log(excludeField);
+  const filterQuery =searchQuery.find(queryObject).populate('admissionSemester').populate({
     path:'academicDepartment',
     populate:'academicFaculty'
 });
-  return result;
+
+let sort='-createdAt'
+if(query.sort){
+
+  sort=query.sort as string
+}
+
+//sortQuery
+const sortQuery= filterQuery.sort(sort);
+//limit 
+let limit=1;
+let page=1;
+let skip=1;
+if(query?.limit)
+{
+  limit=Number(query?.limit);
+  
+}
+if(query?.page)
+{
+  page=Number(query?.page);
+  skip=(page -1)*limit;
+}
+//pagination 
+const paginationQuery=sortQuery.skip(skip);
+const limitQuery= paginationQuery.limit(limit);
+
+// file limiting 
+
+let fields='-__v';
+if(query.fields){
+
+  fields=(query.fields as string).split(',').join(' ');
+ 
+}
+
+const fieldQuery=await limitQuery.select(fields);
+
+
+return fieldQuery;*/
 };
+
+
 const deleteStudentFromDb=async(id:string)=>{
 
-  const result=Student.updateOne({ id }, { isDeleted: true });
+  const result=await Student.updateOne({ id }, { isDeleted: true });
   return result;
 
 
@@ -25,7 +94,7 @@ const deleteStudentFromDb=async(id:string)=>{
 
 //findone 
 const specificStudentFromDb=async(id:string)=>{
-  const result = Student.findById(id).populate('admissionSemester').populate({
+  const result = await Student.findById(id).populate('admissionSemester').populate({
     path:'academicDepartment',
     populate:'academicFaculty'
   })

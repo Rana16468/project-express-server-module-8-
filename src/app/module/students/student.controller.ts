@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {  RequestHandler } from 'express';
 import { StudentServices } from './student.services';
 import sendRespone from '../../utility/sendRespone';
@@ -33,8 +34,12 @@ const deleteStudent:RequestHandler=catchAsync(async(req,res)=>{
 
 //get all student
 const getAllStudents:RequestHandler = catchAsync(async (req, res) => {
+
+
+  const data=req.query
  
-    const result = await StudentServices.getAllStudentFormDb();
+  //QueryString.ParsedQs
+    const result = await StudentServices.getAllStudentFormDb(data);
     sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find  Student',data:result})
  
   

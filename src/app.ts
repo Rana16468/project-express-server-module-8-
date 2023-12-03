@@ -5,11 +5,16 @@ import notFound from './app/middlewere/notFound';
 import router from './app/router';
 const app: Application = express();
 
+
+
+
 //pearsse
 app.use(express.json());
 app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
+
+  Promise.reject();
   res.send('Hello World!');
 });
 

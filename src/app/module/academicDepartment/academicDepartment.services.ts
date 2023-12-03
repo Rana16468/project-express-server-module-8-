@@ -13,6 +13,8 @@ const createAcademicDepartmentIntoDb= async(paylod:TAcademicDepartment)=>{
 
 const  getAllAcademicDepertmentFormDb=async()=>{
 
+
+
     const result=await AcademicDepartment.find().populate('academicFaculty');
     return result;
 }
