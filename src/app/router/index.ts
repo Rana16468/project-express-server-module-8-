@@ -6,6 +6,8 @@ import { AcademicFacultyRouter } from '../module/academicFaculty/academicFaculty
 import { AcademicDepartmentRouter } from '../module/academicDepartment/academicDepartments.route';
 import { FacultyRouter } from '../module/Faculty/faculty.router';
 import { CourseRouter } from '../module/Course/course.router';
+import { SemesterRegistrationRouter } from '../module/semesterRegistration/semesterRegistration.router';
+import { OfferedCourseRouter } from '../module/OfferedCourse/offeredCourse.router';
 
 const router=express.Router();
 
@@ -16,7 +18,9 @@ const modelRouter=[
     {path:'/academic-faculty',route:AcademicFacultyRouter},
     {path:'/academic-department',route:AcademicDepartmentRouter},
     {path:'/faculty',route:FacultyRouter},
-    {path:'/courses',route:CourseRouter}
+    {path:'/courses',route:CourseRouter},
+    {path:'/semester-registration',route:SemesterRegistrationRouter},
+    {path:'/offered-course',route:OfferedCourseRouter}
 
 ]
 
