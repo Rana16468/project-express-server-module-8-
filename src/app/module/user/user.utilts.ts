@@ -15,6 +15,12 @@ const findLastFacultyId=async()=>{
 
 
 }
+
+const findLastAdminId=async()=>{
+
+  const lastFaculty=await User.findOne({role:'admin'},{_id:0,id:1}).sort({createdAt:-1}).lean();
+  return lastFaculty?lastFaculty?.id:undefined;
+}
 export const generateStudentId=async(payload:TAcademicSemester | null)=>{
 
     // first Time 0000,then 0001
@@ -51,3 +57,18 @@ export const  generateFaultyId=async()=>{
       incrementID=`F-${incrementID}`;
       return incrementID
 }
+
+// A-0001
+export const generateAdminId=async()=>{
+  let currentId=(0).toString();
+  const lastAdminId =await findLastAdminId();
+  if(lastAdminId)
+  {
+    currentId=lastAdminId?.substring(5) as string;
+  }
+  let incrementID=(Number(currentId) +1).toString().padStart(4,'0');
+  incrementID=`A-${incrementID}`;
+  return incrementID
+
+}
+

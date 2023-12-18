@@ -1,16 +1,21 @@
 
+
 import { Schema, model } from "mongoose";
-import { TUser } from "./user/user.interface";
+import { TUser, UserModel } from "./user/user.interface";
 import config from "../config";
 import bcryp from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 
 
-
-const TUserSchema=new Schema<TUser>({
+const TUserSchema=new Schema<TUser,UserModel>({
     id:{type:String,required:[true,'ID is Required'],unique:true},
-    password:{type:String,required:[true,'Password is Required']},
+    password:{type:String,required:[true,'Password is Required'],select:0},
    needsPasswordChange:{type:Boolean,required:[true,'Ness Password Change is Required'] ,default:true},
+   passwordChangedAt: {
+    type: Date,
+    required:[false,'Password Change At Is Not Required']
+  },
    role:{
     type:String,
     enum:{
@@ -40,6 +45,7 @@ TUserSchema.pre('save', async function(next){
     // hasing pawword sand save into db
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const user=this;
+   
     user.password=await bcryp.hash(user.password,Number(config.byrypt_salt_rounds));
     next();
   
@@ -51,4 +57,22 @@ TUserSchema.pre('save', async function(next){
     next();
   });
 
-export const User= model<TUser>('user',TUserSchema);
+  TUserSchema.statics.isUserExistByCustomId=async function(id:string)
+  {
+
+    return await User.findOne({id}).select('+password');
+  }
+  TUserSchema.statics.isPasswordMatched=async function(plainTextPassword:string,hashPassword:string)
+  {
+    const isPasswordMatch=await bcrypt.compare(plainTextPassword,hashPassword);
+    return isPasswordMatch;
+  }
+  TUserSchema.statics.isJWTIssuesBeforePasswordChange=async function(passwordChangeTimestamp:Date,jwtIssuesTime:number)
+  {
+
+    const passwordChangeTime= new Date(passwordChangeTimestamp).getTime()/1000
+    return passwordChangeTime>jwtIssuesTime
+
+  }
+
+export const User= model<TUser,UserModel>('user',TUserSchema);

@@ -3,6 +3,7 @@ import cors from 'cors';
 import globalErrorHandelar from './app/middlewere/globalErrorHandeling';
 import notFound from './app/middlewere/notFound';
 import router from './app/router';
+import cookieParser from 'cookie-parser';
 const app: Application = express();
 
 
@@ -10,7 +11,8 @@ const app: Application = express();
 
 //pearsse
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser())
+app.use(cors({origin:['http://localhost:3005']}));
 
 app.get('/', (req: Request, res: Response) => {
 

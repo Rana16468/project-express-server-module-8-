@@ -8,6 +8,8 @@ import httpStatus from "http-status";
 
 const getAllFaculty:RequestHandler=catchAsync(async(req,res)=>{
 
+  console.log(req.cookies);
+
     const result=await FacultyService.getAllFacultyIntoDb();
     sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Find All Faculty Successfully',data:result});
 

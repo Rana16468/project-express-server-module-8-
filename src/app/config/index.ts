@@ -6,5 +6,7 @@ export default {
   port: process.env.PORT,
   database_url: process.env.DATABASE_URL,
   byrypt_salt_rounds:process.env.BCRYPT_SALT_ROUNDS,
-  default_password:process.env.DEFAULT_PASS
+  default_password:process.env.DEFAULT_PASS,
+  jwt_access_srcret:process.env.JWT_ACCESS_SECRET,
+  jwt_refeesh_srcret:process.env.JWT_REFRESH_TOKEN
 };

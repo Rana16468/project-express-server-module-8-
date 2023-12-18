@@ -13,7 +13,10 @@ const getAllStudentFormDb = async (query:Record<string,unknown>) => {
 
   const studentSearchableField=['email','name.firstName',"presentAddress"]
 
-  const studentQuery= new QueryBuilder(Student.find(),query);
+  const studentQuery= new QueryBuilder(Student.find().populate('admissionSemester').populate({
+    path:'academicDepartment',
+    populate:'academicFaculty'
+  }).populate('user'),query);
   studentQuery.search(studentSearchableField).filter().sort().paginate().fields();
   const result= await studentQuery.modelQuery;
   return result;
