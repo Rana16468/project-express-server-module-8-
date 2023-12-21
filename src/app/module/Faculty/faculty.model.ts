@@ -25,6 +25,7 @@ const TFacultySchema= new Schema<TFaculty>({
     name:{type:TFacultyName,required:[true,'Name is Required']},
     gmail:{type:String,required:[true,'Gamil is Required']},
     designation:{type:String,required:[true,'Designation is Required']},
+    email:{type:String,unique:true,trim:true,required:[true,'Email is Required']},
     gender:{type:String,enum:{values:Gender,message:'{VALUE} is Not Required'},required:[true,'Gender is Required']},
     bloogGroup:{type:String,enum:{values:BloodGroup,message:'{VALUE} is Not Required'},required:[true,'BloodGroup is Required']},
     dateOfBirth:{type:String,required:[true,'Date Of Birth is Required']},

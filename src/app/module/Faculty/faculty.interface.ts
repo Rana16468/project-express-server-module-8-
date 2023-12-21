@@ -24,6 +24,7 @@ export type TFaculty={
     name:TFacultyName;
     designation:string;
     gmail:string;
+    email:string;
     gender:TGender
     bloogGroup?: TBloodGroup;
     dateOfBirth:string;

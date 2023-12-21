@@ -8,5 +8,6 @@ export default {
   byrypt_salt_rounds:process.env.BCRYPT_SALT_ROUNDS,
   default_password:process.env.DEFAULT_PASS,
   jwt_access_srcret:process.env.JWT_ACCESS_SECRET,
-  jwt_refeesh_srcret:process.env.JWT_REFRESH_TOKEN
+  jwt_refeesh_srcret:process.env.JWT_REFRESH_TOKEN,
+  reset_pass_ui_link:process.env.RESET_PASS_UI_LINK
 };

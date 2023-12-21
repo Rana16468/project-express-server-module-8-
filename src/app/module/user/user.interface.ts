@@ -6,6 +6,7 @@ export interface TUser{
 
     id:string;
     password:string;
+    email:string;
     needsPasswordChange:boolean;
     passwordChangedAt?: Date;
     role:'admin' | 'user' | 'faculty';

@@ -31,7 +31,7 @@ const userNameSchema = z.object({
  const createstudentValidationSchema = z.object({
     body:z.object({
      
-      password:z.string().max(20,{message:'more then a 20 charater maximun use'}),
+      password:z.string().max(20,{message:'more then a 20 charater maximun use'}).optional(),
       student:z.object({
       name: userNameSchema,
       gender: z.enum(['male', 'female', 'other']),
@@ -44,7 +44,7 @@ const userNameSchema = z.object({
       permanentAddress: z.string(),
       guardian: guardianSchema,
       localGuardian: localGuardianSchema,
-      profileImg: z.string(),
+     // profileImg: z.string(),
       admissionSemester:z.string(),
       academicDepartment:z.string()
      })

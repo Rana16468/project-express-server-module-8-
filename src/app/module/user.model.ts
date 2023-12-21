@@ -11,6 +11,7 @@ import bcrypt from 'bcrypt';
 const TUserSchema=new Schema<TUser,UserModel>({
     id:{type:String,required:[true,'ID is Required'],unique:true},
     password:{type:String,required:[true,'Password is Required'],select:0},
+    email:{type:String,required:[true,'Email is Required']},
    needsPasswordChange:{type:Boolean,required:[true,'Ness Password Change is Required'] ,default:true},
    passwordChangedAt: {
     type: Date,

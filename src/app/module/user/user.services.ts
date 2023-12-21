@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import mongoose from "mongoose";
 import config from "../../config";
 import { AcademicSemester } from "../academicSemester/academicSemester.model";
@@ -12,8 +14,11 @@ import { TFaculty } from "../Faculty/faculty.interface";
 import { Faculty } from "../Faculty/faculty.model";
 import { Admin } from "../AdminUser/admin.model";
 import { TAdmin } from "../AdminUser/admin.interface";
+import { sendImageToCloudinary } from "../../utility/sendImageToCloudinary";
 
-const createStudentIntoDb = async (password:string,payload: TStudent) => {
+
+
+const createStudentIntoDb = async (password:string,payload: TStudent,file:any) => {
     
     const admissionSemester=await  AcademicSemester.findById(payload.admissionSemester)
 
@@ -22,14 +27,22 @@ const createStudentIntoDb = async (password:string,payload: TStudent) => {
     userData.password=password || config.default_password as string;
     //set Student Role
     userData.role='user';
+    userData.email=payload?.email;
     //set munality auto generated id
+    userData.id=await generateStudentId(admissionSemester)
+
+    //send image to Cloudinary
+
+    const imageName=`${userData.id}${payload.name.firstName}`;
+    const path=file?.path
+   const  {secure_url}= await sendImageToCloudinary(imageName,path);
 
     const session=await mongoose.startSession();
 
 
     try{
       session.startTransaction();
-      userData.id=await generateStudentId(admissionSemester)
+    
       // create a user model 
      const newUser = await User.create([userData],{session});
      // create a student
@@ -39,6 +52,7 @@ const createStudentIntoDb = async (password:string,payload: TStudent) => {
      }
      payload.id= newUser[0].id
      payload.user=newUser[0]._id;
+     payload.profileImg=secure_url
     
      // create a student (transaction 2)
      const newStudent=await Student.create([payload],{session});
@@ -64,6 +78,7 @@ const createStudentIntoDb = async (password:string,payload: TStudent) => {
        const userData:Partial<TUser>={};
        userData.password= password  || config.default_password as string;
        userData.role='faculty';
+       userData.email=payload?.email;
 
        const session=await mongoose.startSession();
        try{
@@ -101,6 +116,7 @@ const createStudentIntoDb = async (password:string,payload: TStudent) => {
   //if password is not given , use deafult password
   userData.password= password  || config.default_password as string;
   userData.role = 'admin';
+  userData.email=payload?.email;
     //set  generated id
   userData.id = await generateAdminId();
   const session=await mongoose.startSession();
@@ -135,8 +151,43 @@ const createStudentIntoDb = async (password:string,payload: TStudent) => {
   
 };
 
+// getme serviece function 
+const getMe=async(userId:string,role:string)=>{
+  // const decoded=vificationToken(token,config.jwt_access_srcret as string);
+  // const {userId,role}=decoded;
+
+  let result={} || null;
+  if(role==='user')
+  {
+    result=await Student.findOne({id:userId});
+  }
+  else if(role==='faculty')
+  {
+    result=await Faculty.findOne({id:userId});
+  }
+  else{
+    result=await Admin.findOne({id:userId});
+  }
+
+
+
+  return result
+
+
+}
+
+const changeStatus=async(id:string,payload:{status:string})=>{
+
+  const result=await User.findByIdAndUpdate(id,payload,{new:true,runValidators:true})
+
+  return result;
+
+}
+
  export const UserService={
     createStudentIntoDb,
     createFacultyIntoDb,
-    createAdminIntoDB
+    createAdminIntoDB,
+    getMe,
+    changeStatus
  }

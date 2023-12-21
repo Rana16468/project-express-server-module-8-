@@ -22,10 +22,25 @@ const requestTokenValidationSchema=z.object({
     })
 
 
+});
+const forgetPasswordValidationSchema=z.object({
+    body:z.object({
+        id:z.string({required_error:'Id is Required'})
+    })
+});
+
+const resetPasswordValidationSchema=z.object({
+    body:z.object({
+        id:z.string({required_error:'Id is Required'}),
+        newPassword:z.string({required_error:'New Password is Required'})
+    })
 })
+
 
 export const AuthAvalidation={
     loginValidationSchema,
     changePasswordValidationSchema,
-    requestTokenValidationSchema
+    requestTokenValidationSchema,
+    forgetPasswordValidationSchema,
+    resetPasswordValidationSchema
 }
