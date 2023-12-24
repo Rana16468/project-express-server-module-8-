@@ -23,7 +23,6 @@ const TFacultySchema= new Schema<TFaculty>({
     id:{type:String,required:[true,'Id is Required'],unique:true},
     user:{type:Schema.Types.ObjectId,required:[true,'User is Required'],ref:'User'},
     name:{type:TFacultyName,required:[true,'Name is Required']},
-    gmail:{type:String,required:[true,'Gamil is Required']},
     designation:{type:String,required:[true,'Designation is Required']},
     email:{type:String,unique:true,trim:true,required:[true,'Email is Required']},
     gender:{type:String,enum:{values:Gender,message:'{VALUE} is Not Required'},required:[true,'Gender is Required']},

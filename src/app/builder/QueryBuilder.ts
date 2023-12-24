@@ -63,6 +63,23 @@ fields()
 
 }
 
+async countTotal()
+{
+    const totalQuers=this.modelQuery.getFilter();
+    const total= await this?.modelQuery?.model?.countDocuments(totalQuers);
+
+ const limit=Number(this?.query?.limit) || 0;
+    const page=Number(this?.query?.page) || 1;
+    const totalPage=Math.ceil(total/limit)
+    return {
+        total,
+        page,
+        limit,
+        totalPage
+    }
+
+}
+
 
 
 

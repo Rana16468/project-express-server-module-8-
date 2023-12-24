@@ -10,6 +10,7 @@ import { SemesterRegistrationRouter } from '../module/semesterRegistration/semes
 import { OfferedCourseRouter } from '../module/OfferedCourse/offeredCourse.router';
 import { LoginUserRouter } from '../module/auth/auth.router';
 import { AdminRouter } from '../module/AdminUser/admin.router';
+import { EnrolledCourseRouter } from '../module/EnrolledCourses/enrolledCourse.router';
 
 const router=express.Router();
 
@@ -24,7 +25,8 @@ const modelRouter=[
     {path:'/courses',route:CourseRouter},
     {path:'/semester-registration',route:SemesterRegistrationRouter},
     {path:'/offered-course',route:OfferedCourseRouter},
-    {path:'/login-user',route:LoginUserRouter}
+    {path:'/login-user',route:LoginUserRouter},
+    {path: '/enrolled-courses',route:EnrolledCourseRouter},
 
 ]
 

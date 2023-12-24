@@ -25,7 +25,6 @@ const createTFacultySchema = z.object({
     faculty:z.object({
         name: TFacultyNameSchema,
         designation: z.string().min(1),
-        gmail:z.string(),
         gender: z.enum([...Gender] as [string, ...string[]]),
         email:z.string(),
         bloogGroup:z.enum([...BloodGroup] as [string, ...string[]]),
@@ -36,7 +35,7 @@ const createTFacultySchema = z.object({
         permanentAddress: z.string().min(1),
         guirdian: TFacultyGuirdianSchema,
         academicDepartment: z.string().min(1),
-       profileImg: z.string().min(1)
+      //  profileImg: z.string().min(1)
     })
   })
 });
@@ -64,7 +63,6 @@ const updateFacultyValidationSchema=z.object({
       faculty:z.object({
           name: updateTFacultyNameSchema,
           designation: z.string().min(1).optional(),
-          gmail:z.string().optional(),
           gender: z.enum([...Gender] as [string, ...string[]]).optional(),
           email:z.string().optional(),
           bloogGroup:z.enum([...BloodGroup] as [string, ...string[]]).optional(),
@@ -75,7 +73,7 @@ const updateFacultyValidationSchema=z.object({
           permanentAddress: z.string().min(1).optional(),
           guirdian: updateTFacultyGuirdianSchema,
           academicDepartment: z.string().min(1).optional(),
-         profileImg: z.string().min(1).optional()
+          profileImg: z.string().min(1).optional()
       })
     })
   });

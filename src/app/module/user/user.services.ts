@@ -73,23 +73,29 @@ const createStudentIntoDb = async (password:string,payload: TStudent,file:any) =
  };
 
 
- const createFacultyIntoDb= async (password:string,payload:TFaculty)=>
+ const createFacultyIntoDb= async (password:string,payload:TFaculty,file:any)=>
  {
        const userData:Partial<TUser>={};
        userData.password= password  || config.default_password as string;
        userData.role='faculty';
        userData.email=payload?.email;
 
+       userData.id=await generateFaultyId();
+       const imageName=`${userData.id}${payload.name.firstName.trim()}`;
+       const path=file?.path
+       const  {secure_url}= await sendImageToCloudinary(imageName,path);
+
        const session=await mongoose.startSession();
        try{
         session.startTransaction();
-        userData.id=await generateFaultyId();
+      
         const newFaculty=await User.create([userData],{session});
         if(!newFaculty.length){
           throw new AppError(httpStatus.BAD_REQUEST,'Faculty Create Session Failed','');
         }
         payload.id=newFaculty[0].id;
         payload.user=newFaculty[0]._id;
+        payload.profileImg=secure_url;
 
         const facultyInfo=await Faculty.create([payload],{session});
         if(!facultyInfo.length){

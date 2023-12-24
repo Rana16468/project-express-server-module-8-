@@ -9,6 +9,7 @@ cloudinary.config({
     api_key: '236123377273713', 
     api_secret: 'jNvvVMv42XARMP3KfgJ5nsWknDk' 
   });
+ 
   
           
 export const sendImageToCloudinary=(imageName:string,path:string)=>{

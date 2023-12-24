@@ -21,7 +21,15 @@ upload.single('file'),
     req.body=JSON.parse(req.body.data)
     next();
 },validateRequest(studentValidations.createstudentValidationSchema),UserController.createStudent);
-router.post('/create-faculty',auth(USER_ROLE.admin),validateRequest(FacultyValidation.createTFacultySchema),UserController.createFaculty);
+router.post('/create-faculty',auth(USER_ROLE.admin),
+upload.single('file'),
+(req:Request,res:Response,next:NextFunction)=>{
+    
+    req.body=JSON.parse(req.body.data)
+    next();
+
+},
+validateRequest(FacultyValidation.createTFacultySchema),UserController.createFaculty);
 router.post('/create-admin',auth(USER_ROLE.admin),validateRequest(AdminValidation.createTAdminSchema),UserController.createAdmin)
 // get me router
 router.get('/me',auth(USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.user),UserController.getMe);
