@@ -14,14 +14,17 @@ import { upload } from '../../utility/sendImageToCloudinary';
 
 
 const router=express.Router();
-router.post('/create-student',auth(USER_ROLE.admin),
+router.post('/create-student',auth(USER_ROLE.admin,'superAdmin'),
 upload.single('file'),
 
 (req:Request,res:Response,next:NextFunction)=>{
     req.body=JSON.parse(req.body.data)
     next();
 },validateRequest(studentValidations.createstudentValidationSchema),UserController.createStudent);
-router.post('/create-faculty',auth(USER_ROLE.admin),
+
+
+
+router.post('/create-faculty',auth(USER_ROLE.admin,USER_ROLE.superAdmin),
 upload.single('file'),
 (req:Request,res:Response,next:NextFunction)=>{
     
@@ -30,9 +33,17 @@ upload.single('file'),
 
 },
 validateRequest(FacultyValidation.createTFacultySchema),UserController.createFaculty);
-router.post('/create-admin',auth(USER_ROLE.admin),validateRequest(AdminValidation.createTAdminSchema),UserController.createAdmin)
+
+
+
+
+
+router.post('/create-admin',auth(USER_ROLE.admin,USER_ROLE.superAdmin),upload.single('file'),(req:Request,res:Response,next:NextFunction)=>{
+    req.body=JSON.parse(req.body.data)
+    next();
+},validateRequest(AdminValidation.createTAdminSchema),UserController.createAdmin)
 // get me router
 router.get('/me',auth(USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.user),UserController.getMe);
-router.post('/change-status/:id',auth(USER_ROLE.admin),validateRequest(UserValidation.chnageStatusValidationSchema),UserController.chnageStatus)
+router.post('/change-status/:id',auth(USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.user,USER_ROLE.superAdmin),validateRequest(UserValidation.chnageStatusValidationSchema),UserController.chnageStatus)
 
 export  const UserRouter=router;

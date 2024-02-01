@@ -2,6 +2,8 @@
 
 export const calculateGradeEndPoints=(totalMarks:number)=>{
 
+    
+
 
     let result:{
         grade:string;

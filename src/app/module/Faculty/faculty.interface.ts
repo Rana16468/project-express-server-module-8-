@@ -35,5 +35,7 @@ export type TFaculty={
     guirdian:TFacultyGuirdian;
     academicDepartment:string;
     profileImg:string;
+    
+     academicFaculty:Types.ObjectId;
     isDeleted:boolean;
 }

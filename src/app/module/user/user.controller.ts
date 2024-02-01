@@ -17,6 +17,7 @@ const createStudent:RequestHandler = catchAsync(async (req, res) => {
  
   
   const {password,student} = req.body;
+  
 
   const result=await UserService.createStudentIntoDb(password,student,req.file);
 
@@ -35,7 +36,7 @@ const createFaculty:RequestHandler=catchAsync(async(req,res)=>{
 const createAdmin:RequestHandler=catchAsync(async(req,res)=>{
 
   const {password,admin}=req.body;
-  const result=await UserService.createAdminIntoDB(password,admin);
+  const result=await UserService.createAdminIntoDB(password,admin,req.file);
   sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Admin Created',data:result});
 
 });

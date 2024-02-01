@@ -95,7 +95,6 @@ const TEnrolledCourseSchema= new Schema<TEnrolledCourse>({
     },
     courseMarks:{
         type:TcourseMarksSchema,
-        required:[false, 'Course Marks is Required'],
         default: {},
     },
     grade:{
@@ -110,11 +109,15 @@ const TEnrolledCourseSchema= new Schema<TEnrolledCourse>({
     },
     gradePoints:{
       type:Number,
-      required:[true,'Grade Point is Required']
+      min: 0,
+      max: 4,
+      default: 0,
+      required:[false,'Grade Point is Required'],
+      
     },
     isCompleted:{
       type:Boolean,
-      required:[true,'IS Completed']
+      required:[false,'IS Completed']
     }
 
 

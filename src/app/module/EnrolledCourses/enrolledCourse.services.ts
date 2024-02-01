@@ -23,6 +23,7 @@ const createEnrolledCourseIntoDb=async(userId:string,payload:TEnrolledCourse)=>{
 
 const {offeredCourse}=payload;
 const isExistOfferedCourse=await OfferedCourse.findById(offeredCourse);
+
 if(!isExistOfferedCourse)
 {
     throw new AppError(httpStatus.NOT_FOUND,'Offered Course Not Founded','');
@@ -30,6 +31,7 @@ if(!isExistOfferedCourse)
 
 //student Id needed 
 const student=await Student.findOne({id:userId},{_id:1});
+
 if(!student)
 {
     throw new AppError(httpStatus.NOT_FOUND,'Student Id Not Founded','');
@@ -37,6 +39,7 @@ if(!student)
 
 // isCourse exists
 const isExistsCourse=await Course.findById(isExistOfferedCourse.course).select('credits');
+
 if(!isExistsCourse)
 {
     throw new AppError(httpStatus.NOT_FOUND,'Course Id Not Founded','');
@@ -55,6 +58,7 @@ const isStudentAlreadyEnrolled=await EnrolledCourse.findOne({
   
 });
 
+
 if(isStudentAlreadyEnrolled)
 {
     throw new AppError(httpStatus.CONFLICT,'Student Already Enrolled','');
@@ -63,6 +67,8 @@ if(isStudentAlreadyEnrolled)
 //check total credit execeds maxcredits
 
 const semesterRegistrations=await SemesterRegistration.findById(isExistOfferedCourse?.semesterRegistration).select('maxCredite');
+
+
 if(!semesterRegistrations)
 {
     throw new AppError(httpStatus.BAD_REQUEST,'Semester Registarion Maximun Creadit Not Exist','');
@@ -107,6 +113,7 @@ const enroollCourses=await EnrolledCourse.aggregate([
 
 
 const totalCredits=enroollCourses.length>0? enroollCourses[0].totalEnrollCredits:'0'
+
 if(totalCredits && totalCredits +  isExistsCourse?.credits >semesterRegistrations?.maxCredite)
 {
     throw new AppError(httpStatus.BAD_REQUEST,'You have exected maximun number of credits','');
@@ -114,6 +121,8 @@ if(totalCredits && totalCredits +  isExistsCourse?.credits >semesterRegistration
 
 
 // transaction and rollback
+
+
 
 const session=await  mongoose.startSession();
 try{
@@ -135,6 +144,7 @@ try{
         
         }
     ],{session});
+    
 
     if(!result.length)
     {
@@ -173,9 +183,12 @@ catch(error:any)
 const updateEnrollmentCourseMarksIntoDb=async(facultyId:string,payload:Partial<TEnrolledCourse>)=>{
 
     const {semesterRegistration,offeredCourse,student,courseMarks}=payload;
+
+   
     
     
     const isExistOfferedCourse=await OfferedCourse.findById(offeredCourse);
+
     if(!isExistOfferedCourse)
     {
         throw new AppError(httpStatus.NOT_FOUND,'Offered Course Not Founded','');
@@ -200,26 +213,39 @@ const updateEnrollmentCourseMarksIntoDb=async(facultyId:string,payload:Partial<T
         throw new AppError(httpStatus.NOT_FOUND,'Faculty Id Not Founded','');
     }
 
+   
     // is course belong to faculty
+    //semesterRegistration
+
+    
+
     const isCourseBelongToFaculty=await EnrolledCourse.findOne({
-        semesterRegistration,offeredCourse,student,
-        faculty:isExistFacultyId._id
         
+        semesterRegistration,
+    offeredCourse,
+    student,
+    faculty: isExistFacultyId._id,
+
        
         
-    })
-
+    });
+    //console.log(isCourseBelongToFaculty);
+    
 
     if(!isCourseBelongToFaculty)
     {
         throw new AppError(httpStatus.FORBIDDEN,'CourseBelongToFaculty Id Not Founded','');
     }
     const mofiedData:Record<string,unknown>={...courseMarks};
+   
     // course marks final terms
     if(courseMarks?.finalTerm)
     {
+        
         const {classTest1,classTest2,finalTerm, midTerm}=isCourseBelongToFaculty.courseMarks;
-        const totalMarks=Math.ceil(classTest1)+ Math.ceil(classTest2) + Math.ceil(midTerm) + Math.ceil(finalTerm)
+        
+        const totalMarks=Math.ceil(classTest1)+ Math.ceil(classTest2) + Math.ceil(midTerm) + Math.ceil(finalTerm);
+       
        const courseResult= calculateGradeEndPoints(totalMarks);
        mofiedData.grade=courseResult.grade;
        mofiedData.gradePoints=courseResult.gradePoint;

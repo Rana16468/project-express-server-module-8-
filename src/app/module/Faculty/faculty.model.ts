@@ -34,7 +34,8 @@ const TFacultySchema= new Schema<TFaculty>({
     permanentAddress:{type:String,required:[true,'PermanentAddress is Required']},
     guirdian:{type:TFacultyGuirdianSchema,required:[true,'Guirdian is Required']},
     academicDepartment:{type:String,required:[true,'Academic Department is Required']},
-    profileImg:{type:String,required:[true,'Profile Image is Required']},
+    profileImg:{type:String,required:[false,'Profile Image is Required'],default:''},
+    academicFaculty:{type:Schema.Types.ObjectId,required:[true,'Academic Faculty is Required']},
     isDeleted:{type:Boolean,required:[false,'is Deleted is Required'],default:false}
 
 },{

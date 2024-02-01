@@ -17,6 +17,12 @@ import { AcademicSemester } from "./academicSemester.model";
 
  }
 
+ const getAllAcademicSemestersFromDB = async () => {
+   const result = await AcademicSemester.find();
+   return result;
+ };
+
  export const AcademicSemesterService={
-    createAcademicSemesterIntoDb
+    createAcademicSemesterIntoDb,
+    getAllAcademicSemestersFromDB
  }

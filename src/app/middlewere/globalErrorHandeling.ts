@@ -70,7 +70,7 @@ const globalErrorHandelar:ErrorRequestHandler=(err,req,res,next)=>{
       {path:'',message:err?.message}
     ];
   }
-
+  
 
     return res.status(statusCode).json({success:false,message,  errorSources, stack:config.NODE_ENV==='development'?err?.stack:null});
     next();
