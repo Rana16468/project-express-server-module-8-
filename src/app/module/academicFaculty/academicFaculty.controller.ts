@@ -17,8 +17,9 @@ const createAcademicFaculty=catchAsync(async(req:Request,res:Response)=>{
 const getAllAcademicFaculties=catchAsync(async(req:Request,res:Response)=>{
 
 
-    const result=await AcademicFacultyService.getAllAcademicFacultiesFormDb();
-    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find All Academic Faculty',data:result})
+    const result=await AcademicFacultyService.getAllAcademicFacultiesFormDb(req.query);
+    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find All Academic Faculty',meta: result.meta,
+    data: result.result,})
 });
 
 const getSingleAcademicFaculties=catchAsync(async(req:Request,res:Response)=>{

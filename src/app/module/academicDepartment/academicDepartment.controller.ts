@@ -22,8 +22,8 @@ const createAcademicDepartment=catchAsync(async(req:Request,res:Response)=>{
 const getAllAcademicDepartment=catchAsync(async(req:Request,res:Response)=>{
 
 
-    const result=await AcademicDepartmentService.getAllAcademicDepertmentFormDb();
-    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'successfully get All  Academic Department',data:result});
+    const result=await AcademicDepartmentService.getAllAcademicDepertmentFormDb(req.query);
+    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'successfully get All  Academic Department',meta:result.meta,data:result.result});
 });
 
 const getSingleAcademicDeaprtment=catchAsync(async(req:Request,res:Response)=>{

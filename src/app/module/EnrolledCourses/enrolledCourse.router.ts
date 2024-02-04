@@ -13,7 +13,7 @@ router.post('/create-enrolled-course',auth(USER_ROLE.user),validateRequest(Enrol
 router.patch(
     '/update-enrolled-course-marks',
     auth(USER_ROLE.faculty,USER_ROLE.admin,USER_ROLE.superAdmin),
-   validateRequest(EnrolledCourseValidation.createEnrolledCourseValidation),EnrolledCourseController.updateEnrollmentCourseMarks
+   validateRequest(EnrolledCourseValidation.updateEnrolledCourseMarksValidationZodSchema),EnrolledCourseController.updateEnrollmentCourseMarks
    
   );
 
