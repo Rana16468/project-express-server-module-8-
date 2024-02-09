@@ -16,8 +16,8 @@ const createCourse:RequestHandler=catchAsync(async(req,res)=>{
 });
 const getAllCourse:RequestHandler=catchAsync(async(req,res)=>{
 
-    const result=await CourseService.getAllCourseIntoDb();
-    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'All Course Find Successfully',data:result});
+    const result=await CourseService.getAllCourseIntoDb(req.query);
+    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'All Course Find Successfully',meta:result.meta,data:result.result});
 });
 
 const getSingleCourse:RequestHandler=catchAsync(async(req,res)=>{

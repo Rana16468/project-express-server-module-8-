@@ -3,6 +3,8 @@ import { TCourse, TCourseFaculty } from "./course.interface";
 import { Course, CourseFaculty } from "./course.model";
 import AppError from "../../error/AppError";
 import httpStatus from "http-status";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { CourseSearchableFields } from "./course.constant";
 
 
 
@@ -12,10 +14,24 @@ const result=await Course.create(payload);
 return result;
 
 };
-const getAllCourseIntoDb=async()=>{
+const getAllCourseIntoDb=async(query:Record<string,unknown>)=>{
 
-    const result=await Course.find().populate('preRequisiteCourses.course');
-    return result;
+    const courseQuery = new QueryBuilder(
+        Course.find().populate('preRequisiteCourses.course'),
+        query,
+      )
+        .search(CourseSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    
+      const result = await courseQuery.modelQuery;
+      const meta = await courseQuery.countTotal();
+      return {meta,result};
+
+    // const result=await Course.find().populate('preRequisiteCourses.course');
+    // return result;
 }
 
 const getSingleCourseIntoDb=async(id:string)=>{

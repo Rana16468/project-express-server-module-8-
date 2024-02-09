@@ -40,7 +40,7 @@ const getAllStudents:RequestHandler = catchAsync(async (req, res) => {
  
   //QueryString.ParsedQs
     const result = await StudentServices.getAllStudentFormDb(data);
-    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find  Student',data:result})
+    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Successfully Find  Student',meta: result.meta,data:result.result})
  
   
 });

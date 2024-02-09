@@ -5,14 +5,34 @@ import { Faculty } from "./faculty.model";
 import { User } from "../user.model";
 import AppError from "../../error/AppError";
 import httpStatus from "http-status";
+import { FacultySearchableFields } from "./faculty.constant";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 
 
 
-const getAllFacultyIntoDb=async()=>{
+const getAllFacultyIntoDb=async(query:Record<string,unknown>)=>{
 
-    const result=await Faculty.find();
-    return result;
+    // const result=await Faculty.find();
+    // return result;
+
+
+    const facultyQuery = new QueryBuilder(
+        Faculty.find().populate('academicDepartment academicFaculty'),
+        query,
+      )
+        .search(FacultySearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    
+      const result = await facultyQuery.modelQuery;
+      const meta = await facultyQuery.countTotal();
+      return {
+        meta,
+        result,
+      };
 }
 const getSingleFacultyIntoDb=async(_id:string)=>{
     const result=await Faculty.findById(_id);

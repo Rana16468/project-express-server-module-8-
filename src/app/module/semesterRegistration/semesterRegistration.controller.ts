@@ -18,7 +18,7 @@ const getAllSemesterRegistration:RequestHandler=catchAsync(async(req,res)=>{
 
 const data=req.query;
 const result=await SemesterRegistrationService.getAllSemesterRegistrationFromDb(data);
-sendRespone(res,{success:true,statusCode:httpStatus.OK,message:' Reactrive  Semester Registration Successfully', data:result})
+sendRespone(res,{success:true,statusCode:httpStatus.OK,message:' Reactrive  Semester Registration Successfully',meta:result?.meta, data:result.result})
 });
 const getSingleSemesterRegistration:RequestHandler=catchAsync(async(req,res)=>{
 

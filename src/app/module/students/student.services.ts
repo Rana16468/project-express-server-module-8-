@@ -186,7 +186,7 @@ if(localGuardian && Object.keys(localGuardian))
 
 
 
-  const result=await Student.findOneAndUpdate({id},modifiedUpdatedData,{upsert:true,runValidators:true});
+  const result=await Student.findOneAndUpdate({id},modifiedUpdatedData,{new:true,runValidators:true});
   return result
 
 }

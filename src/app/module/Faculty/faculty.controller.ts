@@ -10,8 +10,8 @@ const getAllFaculty:RequestHandler=catchAsync(async(req,res)=>{
 
 
 
-    const result=await FacultyService.getAllFacultyIntoDb();
-    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Find All Faculty Successfully',data:result});
+    const result=await FacultyService.getAllFacultyIntoDb(req.query);
+    sendRespone(res,{statusCode:httpStatus.OK,success:true,message:'Find All Faculty Successfully',meta:result.meta,data:result.result});
 
 
 });

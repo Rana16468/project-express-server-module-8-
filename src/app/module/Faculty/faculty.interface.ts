@@ -33,7 +33,7 @@ export type TFaculty={
     presentAddress:string;
     permanentAddress:string;
     guirdian:TFacultyGuirdian;
-    academicDepartment:string;
+    academicDepartment:Types.ObjectId;
     profileImg:string;
     
      academicFaculty:Types.ObjectId;
