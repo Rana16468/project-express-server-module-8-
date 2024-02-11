@@ -9,6 +9,7 @@ import { SemesterRegistration } from "../semesterRegistration/semesterRegistrati
 import { Course } from "../Course/course.model";
 import { Faculty } from "../Faculty/faculty.model";
 import { calculateGradeEndPoints } from "./enrolledCourse.utilites";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const createEnrolledCourseIntoDb=async(userId:string,payload:TEnrolledCourse)=>{
 /*
@@ -101,7 +102,7 @@ const enroollCourses=await EnrolledCourse.aggregate([
 {
     $group:{_id:null,totalEnrollCredits:{$sum:'$EnrolledCourseData.credits'}}
 },
-// statage 5
+// statage 5cd
 {
     $project:{
         _id:0,
@@ -265,8 +266,8 @@ const updateEnrollmentCourseMarksIntoDb=async(facultyId:string,payload:Partial<T
     }
 
     const result=await EnrolledCourse.findByIdAndUpdate(isCourseBelongToFaculty._id,mofiedData,{
-        new:true,
-        runValidators:true
+        new:true
+       
     })
 
     return result
@@ -275,7 +276,80 @@ const updateEnrollmentCourseMarksIntoDb=async(facultyId:string,payload:Partial<T
 
 }
 
+const getMyEnrolledCoursesFromDB = async (
+    studentId: string,
+    query: Record<string, unknown>,
+  ) => {
+
+   ;
+    const student = await Student.findOne({ id: studentId });
+
+   
+  
+    if (!student) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Student not found !','');
+    }
+  
+    const enrolledCourseQuery = new QueryBuilder(
+      EnrolledCourse.find({ student: student._id }).populate(
+        'semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course student faculty',
+      ),
+      query,
+    )
+      .filter()
+      .sort()
+      .paginate()
+      .fields();
+  
+    const result = await enrolledCourseQuery.modelQuery;
+    const meta = await enrolledCourseQuery.countTotal();
+  
+    return {
+      meta,
+      result,
+    };
+  };
+
+
+  const getAllEnrolledCoursesFromDB = async (
+    facultyId: string,
+    query: Record<string, unknown>,
+  ) => {
+
+
+    const faculty = await Faculty.findOne({ id: facultyId });
+  
+    if (!faculty) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found !','');
+    }
+  
+    const enrolledCourseQuery = new QueryBuilder(
+      EnrolledCourse.find({
+        faculty: faculty._id,
+      }).populate(
+        'semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course student faculty',
+      ),
+      query,
+    )
+      .filter()
+      .sort()
+      .paginate()
+      .fields();
+  
+    const result = await enrolledCourseQuery.modelQuery;
+    const meta = await enrolledCourseQuery.countTotal();
+  
+    return {
+      meta,
+      result,
+    };
+  };
+
+
+
 export const EnrolledCourseService={
     createEnrolledCourseIntoDb,
-   updateEnrollmentCourseMarksIntoDb
+   updateEnrollmentCourseMarksIntoDb,
+   getMyEnrolledCoursesFromDB,
+   getAllEnrolledCoursesFromDB
 }

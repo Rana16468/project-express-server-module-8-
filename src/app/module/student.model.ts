@@ -199,4 +199,4 @@ studentSchema.virtual('fullName').get(function(){
   return this.name.firstName.concat(' ').concat(this.name.middleName).concat(' ').concat(this.name.lastName)
 })
 
-export const Student = model<TStudent,StudentModels>('student', studentSchema);
+export const Student = model<TStudent,StudentModels>('Student', studentSchema);

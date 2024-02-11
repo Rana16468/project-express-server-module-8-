@@ -53,7 +53,7 @@ const TEnrolledCourseSchema= new Schema<TEnrolledCourse>({
     },
     academicFaculty:{
         type:Schema.Types.ObjectId,
-        ref:' AcademicFaculty',
+        ref:'AcademicFaculty',
         trim:true,
         required:[true,'Academic Faculty is Required']
     },
@@ -67,13 +67,13 @@ const TEnrolledCourseSchema= new Schema<TEnrolledCourse>({
             type:Schema.Types.ObjectId,
             ref:'Course',
             trim:true,
-            required:[true,' Course is Required']
+            required:[true,'Course is Required']
     },
     student:{
         type:Schema.Types.ObjectId,
         ref:'Student',
         trim:true,
-        required:[true,' Course is Required']
+        required:[true,'Course is Required']
 
     },
     faculty:{

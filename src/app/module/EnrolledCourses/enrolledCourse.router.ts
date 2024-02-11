@@ -16,6 +16,17 @@ router.patch(
    validateRequest(EnrolledCourseValidation.updateEnrolledCourseMarksValidationZodSchema),EnrolledCourseController.updateEnrollmentCourseMarks
    
   );
+  router.get(
+    '/my-enrolled-courses',
+    auth(USER_ROLE.user),
+    EnrolledCourseController.getMyEnrolledCourses,
+  );
+
+  router.get(
+    '/',
+    auth(USER_ROLE.faculty),
+   EnrolledCourseController.getAllEnrolledCourses,
+  );
 
 
 export const EnrolledCourseRouter=router;
